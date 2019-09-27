@@ -233,8 +233,6 @@ class rename {
             String currentFileName;
             String nextFileName;
             String fileType;
-            File currentFile = new File(fileName);
-            File nextFile;
 
             if (fileTypeIndex == -1) {
                 fileType = "";
@@ -253,32 +251,26 @@ class rename {
                     for (int i = args.get(key).size() - 1; i >= 0; i--) {
                         String value = args.get(key).get(i);
                         nextFileName = value.concat(currentFileName).concat(fileType);
-                        nextFile = new File(nextFileName);
 
                         fileNameSequence.add(nextFileName);
                         currentFileName = updateFileName(nextFileName);
-                        currentFile = new File(nextFileName);
 
                     }
                 } else if (key.startsWith("suffix")) {
                     for (String value : args.get(key)) {
                         nextFileName = currentFileName.concat(value).concat(fileType);
-                        nextFile = new File(nextFileName);
 
                         fileNameSequence.add(nextFileName);
                         currentFileName = updateFileName(nextFileName);
-                        currentFile = new File(nextFileName);
 
                     }
                 } else if (key.startsWith("replace")) {
                     String oldString = args.get(key).get(0);
                     String newString = args.get(key).get(1);
                     nextFileName = currentFileName.concat(fileType).replace(oldString, newString);
-                    nextFile = new File(nextFileName);
 
                     fileNameSequence.add(nextFileName);
                     currentFileName = updateFileName(nextFileName);
-                    currentFile = new File(nextFileName);
 
                 } else {
                     System.err.println("Invalid argument.");
