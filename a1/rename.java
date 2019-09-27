@@ -25,7 +25,7 @@ class rename {
 
     // Print help option
     private static void printHelp() {
-        System.out.println("(c) 2019 William Chen. Last revised: Sept 24, 2019.");
+        System.out.println("(c) 2019 William Chen. Last revised: Sept 26, 2019.");
         System.out.println("Usage: java rename [-option argument1 argument2 ...]\n");
         System.out.println("Options:");
         System.out.println(" -help                     :: print out a help page and exit the program.");
@@ -42,7 +42,7 @@ class rename {
         HashMap<String, ArrayList<String>> arguments = new HashMap<>();
         ArrayList<String> order = new ArrayList<>();
 
-        String key = "";
+        String key = "noOption";
         ArrayList<String> value = new ArrayList<>();
 
         // process each argument as either a key or value in the pair
@@ -87,7 +87,6 @@ class rename {
 
             // Process the current key/value pair and store them in hashMap
             if (key.equals("file")) {
-                //System.out.println(value);
                 if (arguments.containsKey(key)) {
                     if (arguments.get(key) != null) {
                         value.addAll(arguments.get(key));
@@ -116,7 +115,6 @@ class rename {
                     arguments.put(key, newValue);
                 }
             }
-            //System.out.println(arguments);
         }
 
         storage.arguments = arguments;
@@ -137,7 +135,17 @@ class rename {
         HashMap<String, ArrayList<String>> arguments = storage.arguments;
         ArrayList<String> order = storage.order;
 
+        if (arguments.keySet().contains("noOption")) {
+            for (String value: arguments.get("noOption")) {
+                System.err.println("Invalid input " + value + ". Please specify an option for this input.");
+            }
+            arguments.remove("noOption");
+            order.remove("noOption");
+            hasError = true;
+        }
+
         for (String key: order) {
+
             ArrayList<String> values = arguments.get(key);
             String keyType;
 
@@ -159,9 +167,7 @@ class rename {
             if (!keyType.equals("prefix") && !keyType.equals("suffix") && !keyType.equals("replace") && !keyType.equals("file")) {
                 System.err.println(keyType + " is an invalid option.");
                 hasError = true;
-            }
-
-            if (values == null) {
+            } else if (values == null) {
                 System.err.println("Option '-" + keyType + "' does not have correct number of arguments.");
                 hasError = true;
                 continue;
@@ -204,11 +210,11 @@ class rename {
 
         if (!hasFile || !hasOption) {
             System.err.println("The program does not have a sufficient number of arguments.");
-            printHelp();
             hasError = true;
         }
 
         if (hasError) {
+            printHelp();
             System.exit(0);
         }
 
@@ -223,93 +229,87 @@ class rename {
 
         for (String fileName : files) {
             int fileTypeIndex = fileName.indexOf(".");
-            String oldFileName;
-            String newFileName;
+            ArrayList<String> fileNameSequence = new ArrayList<>();
+            String currentFileName;
+            String nextFileName;
             String fileType;
-            File oldFile = new File(fileName);
-            File newFile;
+            File currentFile = new File(fileName);
+            File nextFile;
+
+            if (fileTypeIndex == -1) {
+                fileType = "";
+                currentFileName = fileName;
+            } else {
+                fileType = fileName.substring(fileTypeIndex);
+                currentFileName = fileName.substring(0, fileTypeIndex);
+            }
 
             for (String key : order) {
                 if (key.equals("file")) {
                     continue;
                 }
 
-                if (fileTypeIndex == -1) {
-                    fileType = "";
-                    oldFileName = fileName;
-                } else {
-                    fileType = fileName.substring(fileTypeIndex);
-                    oldFileName = fileName.substring(0, fileTypeIndex);
-                }
-
                 if (key.startsWith("prefix")) {
                     for (int i = args.get(key).size() - 1; i >= 0; i--) {
                         String value = args.get(key).get(i);
-                        newFileName = value.concat(oldFileName).concat(fileType);
-                        newFile = new File(newFileName);
+                        nextFileName = value.concat(currentFileName).concat(fileType);
+                        nextFile = new File(nextFileName);
 
-                        if (newFile.exists()) {
-                            System.err.println(newFileName + " already exists. Please choose a different name to rename.");
-                            System.exit(0);
-                        }
-
-                        try {
-                            oldFile.renameTo(newFile);
-                            System.out.println("Renamed " + fileName + " to " + newFile.getName() + " successfully.");
-                        } catch (Exception ex) {
-                            System.out.println("Rename unsuccessful: " + ex.toString());
-                        }
-
-                        fileName = newFile.getName();
-                        oldFileName = updateFileName(fileName);
-                        oldFile = new File(fileName);
+                        fileNameSequence.add(nextFileName);
+                        currentFileName = updateFileName(nextFileName);
+                        currentFile = new File(nextFileName);
 
                     }
                 } else if (key.startsWith("suffix")) {
                     for (String value : args.get(key)) {
-                        newFileName = oldFileName.concat(value).concat(fileType);
-                        newFile = new File(newFileName);
+                        nextFileName = currentFileName.concat(value).concat(fileType);
+                        nextFile = new File(nextFileName);
 
-                        if (newFile.exists()) {
-                            System.err.println(newFileName + " already exists. Please choose a different name to rename.");
-                            System.exit(0);
-                        }
-
-                        try {
-                            oldFile.renameTo(newFile);
-                            System.out.println("Renamed " + fileName + " to " + newFile.getName() + " successfully.");
-                        } catch (Exception ex) {
-                            System.out.println("Rename unsuccessful: " + ex.toString());
-                        }
-
-                        fileName = newFile.getName();
-                        oldFileName = updateFileName(fileName);
-                        oldFile = new File(fileName);
+                        fileNameSequence.add(nextFileName);
+                        currentFileName = updateFileName(nextFileName);
+                        currentFile = new File(nextFileName);
 
                     }
                 } else if (key.startsWith("replace")) {
                     String oldString = args.get(key).get(0);
                     String newString = args.get(key).get(1);
-                    newFileName = fileName.replace(oldString, newString);
-                    newFile = new File(newFileName);
+                    nextFileName = currentFileName.concat(fileType).replace(oldString, newString);
+                    nextFile = new File(nextFileName);
 
-                    if (newFile.exists()) {
-                        System.err.println(newFileName + " already exists. Please choose a different name to rename.");
-                        System.exit(0);
-                    }
+                    fileNameSequence.add(nextFileName);
+                    currentFileName = updateFileName(nextFileName);
+                    currentFile = new File(nextFileName);
 
-                    try {
-                        oldFile.renameTo(newFile);
-                        System.out.println("Renamed " + fileName + " to " + newFile.getName() + " successfully.");
-                    } catch (Exception ex) {
-                        System.out.println("Rename unsuccessful: " + ex.toString());
-                    }
-
-                    fileName = newFile.getName();
-                    oldFileName = updateFileName(fileName);
-                    oldFile = new File(fileName);
-
+                } else {
+                    System.err.println("Invalid argument.");
+                    System.exit(0);
                 }
+            }
+
+            // make sure the new file name isn't already taken by another file
+            File inputFile = new File(fileName);
+            File outputFile = new File(fileNameSequence.get(fileNameSequence.size() - 1));
+            if (outputFile.exists()) {
+                System.err.println(outputFile.getName() + " already exists. Please choose a different name to rename.");
+                System.exit(0);
+            }
+
+            // start renaming
+            currentFileName = fileName;
+            for (int i = 0; i < fileNameSequence.size() - 1; i++) {
+                nextFileName = fileNameSequence.get(i);
+
+                System.out.println("Renamed " + currentFileName + " to " + nextFileName + " successfully.");
+                currentFileName = nextFileName;
+            }
+            try {
+                if (inputFile.renameTo(outputFile)) {
+                    System.out.println("Renamed " + currentFileName + " to " + outputFile.getName() + " successfully.");
+                } else {
+                    System.err.println("Rename " + currentFileName + " to " + outputFile.getName() + " unsuccessful.");
+                }
+            } catch (Exception ex) {
+                System.err.println("Rename " + currentFileName + " to " + outputFile.getName() + " unsuccessful: " + ex.toString() + ".");
             }
         }
     }
