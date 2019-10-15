@@ -7,44 +7,51 @@ public class Model {
 
 
 	// all views of this model
-	private ArrayList<IView> views = new ArrayList<>();
+	//private ArrayList<IView> views = new ArrayList<>();
 	public ArrayList<File> files = new ArrayList<>();
+	public ArrayList<Integer> ratings = new ArrayList<>();
+
 	private MainView mainView;
-	private IView layoutView;
-	private IView barView;
+	private LayoutView layoutView;
+	private BarView barView;
+	private boolean isGridView;
 
 	// set the view observer
-	public void addLayoutView(IView view) {
+	public void addLayoutView(LayoutView view) {
 		layoutView = view;
+		isGridView = true;
 	}
 
 	public void addMainView(MainView view) {
 		mainView = view;
 	}
 
-	public void addBarView(IView view) {
+	public void addBarView(BarView view) {
 		barView = view;
+	}
+
+	public void switchLayout() {
+		isGridView = !isGridView;
+		layoutView.updateView(isGridView);
 	}
 
 	public void addFile(File[] images) {
 		for (File file: images) {
 			if (file.getName().endsWith(".jpg") || file.getName().endsWith(".png")) {
 				files.add(file);
+				ratings.add(0);
 			} else {
 				System.err.println("This file type is not supported.");
 			}
 		}
-		layoutView.updateView();
-	}
-	public void expandView() {
-		mainView.expandView();
+		layoutView.updateView(isGridView);
 	}
 
-	// notify the IView observer
-	private void notifyObservers() {
-		System.out.println("Model: notify View");
-		for (IView view : this.views) {
-			view.updateView();
+	public void updateRating(File image, int rating) {
+		if (files.contains(image)) {
+			ratings.set(files.indexOf(image), rating);
+		} else {
+			System.err.println("This image does not exist");
 		}
 	}
 }

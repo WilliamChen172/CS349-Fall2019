@@ -1,12 +1,10 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 
-public class MainView extends JPanel implements IView {
+public class MainView extends JPanel{
 	private JScrollPane mainPanel;
 	private BarView barView;
-	private GridView gridView;
-	private ListView listView;
+	private LayoutView layoutView;
 	private Model model;
 
 	private boolean isGrid;
@@ -19,12 +17,8 @@ public class MainView extends JPanel implements IView {
 		this.model = model;
 
 		// create GridView, tell it about model
-		gridView = new GridView(model);
-		model.addLayoutView(gridView);
-
-		// create ListView
-		listView = new ListView(model);
-		//model.addView(listView);
+		layoutView = new LayoutView(model);
+		model.addLayoutView(layoutView);
 
 		// create BarView
 		barView = new BarView(model);
@@ -32,24 +26,10 @@ public class MainView extends JPanel implements IView {
 
 		// setup mainView
 		this.add(barView, BorderLayout.NORTH);
-		mainPanel = new JScrollPane(gridView);
+		mainPanel = new JScrollPane(layoutView);
 		mainPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		this.add(mainPanel, BorderLayout.CENTER);
 		isGrid = true;
-	}
-
-	// IView interface
-	public void updateView() {
-		System.out.println("Layout isGrid: " + isGrid);
-		if (isGrid) {
-			this.remove(gridView);
-			this.add(listView, BorderLayout.CENTER);
-			isGrid = false;
-		} else {
-			this.remove(gridView);
-			this.add(gridView, BorderLayout.CENTER);
-			isGrid = true;
-		}
 	}
 
 	public void expandView() {

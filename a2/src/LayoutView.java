@@ -8,21 +8,21 @@ import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
 
-class GridView extends JPanel implements IView {
+class LayoutView extends JPanel {
 
 	// the model that this view is showing
 	private Model model;
-	private ArrayList<GridImageView> imageList;
+	private ArrayList<ImageView> imageList;
 	private int columns = 3;
 
 
-	public GridView(Model model) {
-		this.setBorder(BorderFactory.createLineBorder(Color.red));
+	public LayoutView(Model model) {
 		imageList = new ArrayList<>();
 		// a GridBagLayout with default constraints centres
 		// the widget in the window
 		this.setPreferredSize(new Dimension(500, 950));
 		this.setLayout(null);
+		this.setBackground(Color.white);
 
 		// set the model
 		this.model = model;
@@ -40,7 +40,7 @@ class GridView extends JPanel implements IView {
 
 				if (preferredColumns != columns) {
 					columns = preferredColumns;
-					updateColumns();
+					updateGridColumns();
 				}
 			}
 
@@ -57,18 +57,22 @@ class GridView extends JPanel implements IView {
 	}
 
 	// IView interface
-	public void updateView() {
+	public void updateView(boolean isGridView) {
 		imageList.clear();
 
 		for (File file: model.files) {
-			GridImageView imageView = new GridImageView(file);
+			ImageView imageView = new ImageView(file, model, isGridView);
 			imageList.add(imageView);
 		}
 
-		updateColumns();
+		if (isGridView) {
+			updateGridColumns();
+		} else {
+			updateListColumns();
+		}
 	}
 
-	public void updateColumns() {
+	public void updateGridColumns() {
 		int leftInset = 50;
 		int topInset = 50;
 		int imageInset = 50;
@@ -87,7 +91,7 @@ class GridView extends JPanel implements IView {
 
 		this.setPreferredSize(new Dimension(500, imageInset*(totalRows+1) + 400*(totalRows)));
 
-		for (GridImageView imageView: imageList) {
+		for (ImageView imageView: imageList) {
 			Dimension size = imageView.getPreferredSize();
 			int viewWidth = size.width;
 			int viewHeight = size.height;
@@ -103,6 +107,31 @@ class GridView extends JPanel implements IView {
 				topInset += viewHeight + imageInset;
 				nextRow = 0;
 			}
+
+		}
+		this.revalidate();
+	}
+
+	public void updateListColumns() {
+		int leftInset = 50;
+		int topInset = 50;
+		int imageInset = 50;
+		Insets insets = this.getInsets();
+
+		this.removeAll();
+		this.repaint();
+
+
+		this.setPreferredSize(new Dimension(500, imageInset*(imageList.size()+1) + 300*(imageList.size())));
+
+		for (ImageView imageView: imageList) {
+			Dimension size = imageView.getPreferredSize();
+			int viewWidth = size.width;
+			int viewHeight = size.height;
+			this.add(imageView);
+
+			imageView.setBounds(leftInset + insets.left, topInset + insets.top, size.width, size.height);
+			topInset += viewHeight + imageInset;
 
 		}
 		this.revalidate();

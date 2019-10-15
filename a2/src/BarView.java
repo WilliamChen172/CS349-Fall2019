@@ -1,10 +1,11 @@
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-public class BarView extends JPanel implements IView {
+public class BarView extends JPanel {
 
 	private ButtonGroup  toggleLayout;
 	private JRadioButton gridButton;
@@ -21,12 +22,18 @@ public class BarView extends JPanel implements IView {
 		// set layout for the whole panel
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		this.setPreferredSize(new Dimension(1150, 50));
-		this.setBorder(BorderFactory.createEtchedBorder());
+		this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 
 		// create the layout toggle buttons
 		toggleLayout = new ButtonGroup();
 		gridButton = new JRadioButton("grid");
 		listButton = new JRadioButton("list");
+		listButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				model.switchLayout();
+			}
+		});
 		toggleLayout.add(gridButton);
 		toggleLayout.add(listButton);
 
@@ -75,11 +82,4 @@ public class BarView extends JPanel implements IView {
 		this.model = model;
 
 	}
-
-	// IView interface
-	public void updateView() {
-		System.out.println("View: update BarView");
-		//gridButton.setText(Integer.toString(model.getCounterValue()));
-	}
-
 }
