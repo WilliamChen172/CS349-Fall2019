@@ -28,15 +28,10 @@ public class MainView extends JPanel{
 		this.add(barView, BorderLayout.NORTH);
 		mainPanel = new JScrollPane(layoutView);
 		mainPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		mainPanel.getVerticalScrollBar().setUnitIncrement(12);
 		this.add(mainPanel, BorderLayout.CENTER);
 		isGrid = true;
 	}
 
-	public void expandView() {
-		//mainPanel.setBounds(0, 0, mainPanel.getWidth(), mainPanel.getHeight() + 400);
-		//mainPanel.resize(new Dimension(mainPanel.getWidth(), mainPanel.getHeight()+400));
-		mainPanel.revalidate();
-		mainPanel.repaint();
-	}
 
 }

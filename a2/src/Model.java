@@ -1,4 +1,5 @@
 
+import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -14,7 +15,8 @@ public class Model {
 	private MainView mainView;
 	private LayoutView layoutView;
 	private BarView barView;
-	private boolean isGridView;
+	public JFrame mainFrame;
+	public boolean isGridView;
 
 	// set the view observer
 	public void addLayoutView(LayoutView view) {
@@ -28,6 +30,10 @@ public class Model {
 
 	public void addBarView(BarView view) {
 		barView = view;
+	}
+
+	public void addMainFrame(JFrame frame) {
+		mainFrame = frame;
 	}
 
 	public void switchLayout() {

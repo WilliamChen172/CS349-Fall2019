@@ -7,9 +7,8 @@ import java.io.File;
 
 public class BarView extends JPanel {
 
-	private ButtonGroup  toggleLayout;
-	private JRadioButton gridButton;
-	private JRadioButton listButton;
+	private JButton gridButton;
+	private JButton listButton;
 	private JLabel       nameLabel;
 	private JButton 	 importButton;
 	private JLabel  	 filterLabel;
@@ -25,17 +24,36 @@ public class BarView extends JPanel {
 		this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 
 		// create the layout toggle buttons
-		toggleLayout = new ButtonGroup();
-		gridButton = new JRadioButton("grid");
-		listButton = new JRadioButton("list");
+		ImageIcon gridIcon = new ImageIcon("./src/UI/grid_icon.png");
+		ImageIcon listIcon = new ImageIcon("./src/UI/list_icon.png");
+		gridButton = new JButton(gridIcon);
+		listButton = new JButton(listIcon);
+		gridButton.setBorder(BorderFactory.createLoweredBevelBorder());
+		listButton.setBorder(BorderFactory.createRaisedBevelBorder());
+		gridButton.setMaximumSize(new Dimension(50, 40));
+		listButton.setMaximumSize(new Dimension(50, 40));
+		gridButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!model.isGridView) {
+					gridButton.setBorder(BorderFactory.createLoweredBevelBorder());
+					listButton.setBorder(BorderFactory.createRaisedBevelBorder());
+					model.switchLayout();
+				}
+
+			}
+		});
 		listButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				model.switchLayout();
+				if (model.isGridView) {
+					listButton.setBorder(BorderFactory.createLoweredBevelBorder());
+					gridButton.setBorder(BorderFactory.createRaisedBevelBorder());
+					model.switchLayout();
+				}
+
 			}
 		});
-		toggleLayout.add(gridButton);
-		toggleLayout.add(listButton);
 
 		// create the display name of the application
 		nameLabel = new JLabel("Fotag");
@@ -51,7 +69,6 @@ public class BarView extends JPanel {
 					File[] files = fileChooser.getSelectedFiles();
 					model.addFile(files);
 				} else {
-
 				}
 			}
 		});
