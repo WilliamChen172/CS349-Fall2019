@@ -60,12 +60,14 @@ class LayoutView extends JPanel {
 	}
 
 	// IView interface
-	public void updateView(boolean isGridView) {
+	public void updateView(boolean isGridView, int rating) {
 		imageList.clear();
 		isGrid = isGridView;
 		for (File file: model.files) {
-			ImageView imageView = new ImageView(file, model, isGridView, model.ratings.get(model.files.indexOf(file)));
-			imageList.add(imageView);
+			if (model.ratings.get(model.files.indexOf(file)) >= rating) {
+				ImageView imageView = new ImageView(file, model, isGridView, model.ratings.get(model.files.indexOf(file)));
+				imageList.add(imageView);
+			}
 		}
 
 		if (isGridView) {

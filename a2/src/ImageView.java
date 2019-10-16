@@ -37,8 +37,11 @@ public class ImageView extends JPanel {
 
 	private ImageIcon emptyStar = new ImageIcon("./src/UI/star_empty.png");
 	private ImageIcon fullStar = new ImageIcon("./src/UI/star_full.png");
+	private ImageIcon emptyStarSmall = new ImageIcon("./src/UI/star_empty_small.png");
+	private ImageIcon fullStarSmall = new ImageIcon("./src/UI/star_full_small.png");
 
 	public int rating;
+	private boolean isGrid;
 
 	public ImageView(File image, Model model, boolean isGridView, int rateNum) {
 		// set layout for the whole panel
@@ -56,6 +59,8 @@ public class ImageView extends JPanel {
 		this.setBackground(Color.white);
 
 		this.rating = rateNum;
+		this.isGrid = isGridView;
+
 		if (image.exists()) {
 			processFile(image, isGridView);
 			processPreview(image);
@@ -112,7 +117,7 @@ public class ImageView extends JPanel {
 				// Setup Ratings
 				for (int i = 0; i < 5; i++) {
 					content.add(ratings.get(i));
-					ratings.get(i).setBounds(50*i + 135, 525, 30, 30);
+					ratings.get(i).setBounds(50*i + 135, 525, 50, 50);
 				}
 
 				// Setup Clear Button
@@ -132,18 +137,18 @@ public class ImageView extends JPanel {
 						if (isGridView) {
 							for (int j = 0; j < 5; j++) {
 								ImageView.this.add(ratings.get(j));
-								ratings.get(j).setBounds(j*30+75, 345, 30, 30);
+								ratings.get(j).setBounds(j*40+50, 335, 50, 50);
 							}
 							ImageView.this.add(clearBtn);
-							clearBtn.setBounds(120, 380, 60, 15);
-							clearBtn.setFont(new Font("SanSerif", Font.PLAIN, 12));
+							clearBtn.setBounds(125, 380, 60, 15);
+							clearBtn.setFont(new Font("SanSerif", Font.PLAIN, 15));
 						} else {
 							for (int j = 0; j < 5; j++) {
 								ImageView.this.add(ratings.get(j));
-								ratings.get(j).setBounds(j*50+750, 85, 30, 30);
+								ratings.get(j).setBounds(j*50+750, 85, 50, 50);
 							}
 							ImageView.this.add(clearBtn);
-							clearBtn.setBounds(835, 120, 60, 30);
+							clearBtn.setBounds(845, 125, 60, 30);
 							clearBtn.setFont(new Font("SanSerif", Font.PLAIN, 15));
 						}
 
@@ -160,7 +165,8 @@ public class ImageView extends JPanel {
 		// Setup Background Filler
 		background = new JPanel();
 		this.add(background);
-		background.setBorder(BorderFactory.createLineBorder(Color.lightGray, 1));
+		background.setBorder(BorderFactory.createLineBorder(new Color(235, 235, 235), 1));
+		//background.setBorder(BorderFactory.createEmptyBorder());
 		background.setBackground(Color.white);
 
 		// Setup Name Label
@@ -180,9 +186,17 @@ public class ImageView extends JPanel {
 		for (int i = 0; i < 5; i++) {
 			JButton star = new JButton();
 			if (i < rating) {
-				star.setIcon(fullStar);
+				if (isGrid) {
+					star.setIcon(fullStarSmall);
+				} else {
+					star.setIcon(fullStar);
+				}
 			} else {
-				star.setIcon(emptyStar);
+				if (isGrid) {
+					star.setIcon(emptyStarSmall);
+				} else {
+					star.setIcon(emptyStar);
+				}
 			}
 			star.setBorder(BorderFactory.createEmptyBorder());
 			ratings.add(star);
@@ -205,7 +219,11 @@ public class ImageView extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				for (JButton star: ratings) {
-					star.setIcon(emptyStar);
+					if (isGridView) {
+						star.setIcon(emptyStarSmall);
+					} else {
+						star.setIcon(emptyStar);
+					}
 				}
 				rating = 0;
 				model.updateRating(image, rating);
@@ -229,9 +247,9 @@ public class ImageView extends JPanel {
 			name.setBounds(1,302,302,25);
 			date.setBounds(1,322,302,25);
 			for (int j = 0; j < 5; j++) {
-				ratings.get(j).setBounds(j*30+75, 345, 30, 30);
+				ratings.get(j).setBounds(j*40+50, 335, 50, 50);
 			}
-			clearBtn.setBounds(120, 380, 60, 15);
+			clearBtn.setBounds(125, 380, 60, 15);
 		} else {
 			background.setBounds(0,0,202,202);
 			name.setBounds(252,72,502,25);
@@ -241,19 +259,27 @@ public class ImageView extends JPanel {
 			date.setFont(new Font("SanSerif", Font.PLAIN, 15));
 			date.setHorizontalAlignment(SwingConstants.LEFT);
 			for (int j = 0; j < 5; j++) {
-				ratings.get(j).setBounds(j*50+750, 85, 30, 30);
+				ratings.get(j).setBounds(j*50+750, 85, 50, 50);
 			}
-			clearBtn.setBounds(835, 120, 60, 30);
+			clearBtn.setBounds(845, 125, 60, 30);
 			clearBtn.setFont(new Font("SanSerif", Font.PLAIN, 15));
 		}
 	}
 
 	private void updateRating(int rating) {
 		for (int j = 0; j < rating; j++) {
-			ratings.get(j).setIcon(fullStar);
+			if (isGrid) {
+				ratings.get(j).setIcon(fullStarSmall);
+			} else {
+				ratings.get(j).setIcon(fullStar);
+			}
 		}
 		for (int k = rating; k < ratings.size(); k++) {
-			ratings.get(k).setIcon(emptyStar);
+			if (isGrid) {
+				ratings.get(k).setIcon(emptyStarSmall);
+			} else {
+				ratings.get(k).setIcon(emptyStar);
+			}
 		}
 	}
 

@@ -15,8 +15,11 @@ public class Model {
 	private MainView mainView;
 	private LayoutView layoutView;
 	private BarView barView;
+
 	public JFrame mainFrame;
+
 	public boolean isGridView;
+	private int filterRating;
 
 	// set the view observer
 	public void addLayoutView(LayoutView view) {
@@ -38,9 +41,12 @@ public class Model {
 
 	public void switchLayout() {
 		isGridView = !isGridView;
-		layoutView.updateView(isGridView);
+		layoutView.updateView(isGridView, filterRating);
 	}
 
+	public void updateLayout() {
+		layoutView.updateView(isGridView, filterRating);
+	}
 	public void addFile(File[] images) {
 		for (File file: images) {
 			if (file.getName().endsWith(".jpg") || file.getName().endsWith(".png")) {
@@ -50,7 +56,7 @@ public class Model {
 				System.err.println("This file type is not supported.");
 			}
 		}
-		layoutView.updateView(isGridView);
+		layoutView.updateView(isGridView, filterRating);
 	}
 
 	public void updateRating(File image, int rating) {
@@ -59,5 +65,10 @@ public class Model {
 		} else {
 			System.err.println("This image does not exist");
 		}
+	}
+
+	public void filter(int rating) {
+		filterRating = rating;
+		layoutView.updateView(isGridView, filterRating);
 	}
 }
