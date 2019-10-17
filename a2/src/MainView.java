@@ -1,22 +1,25 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class MainView extends JPanel{
+class MainView extends JPanel{
+
 	private JScrollPane mainPanel;
-	private BarView barView;
-	private LayoutView layoutView;
-	private Model model;
+	private BarView     barView;
+	private LayoutView  layoutView;
+	private Model       model;
 
-	private boolean isGrid;
+	private boolean     isGrid;
 
-	public MainView(Model model) {
+	MainView(Model model) {
 		// set layout for the whole panel
 		this.setLayout(new BorderLayout());
 		this.setPreferredSize(new Dimension(1120, 1500));
+
 		// set the model
 		this.model = model;
+		this.isGrid = true;
 
-		// create GridView, tell it about model
+		// create LayoutView
 		layoutView = new LayoutView(model);
 		model.addLayoutView(layoutView);
 
@@ -30,7 +33,7 @@ public class MainView extends JPanel{
 		mainPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		mainPanel.getVerticalScrollBar().setUnitIncrement(12);
 		this.add(mainPanel, BorderLayout.CENTER);
-		isGrid = true;
+
 	}
 
 

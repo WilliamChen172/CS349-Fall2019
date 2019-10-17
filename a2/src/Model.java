@@ -1,53 +1,49 @@
-
 import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
 
 
-public class Model {
-
-
+class Model {
 	// all views of this model
-	//private ArrayList<IView> views = new ArrayList<>();
-	public ArrayList<File> files = new ArrayList<>();
-	public ArrayList<Integer> ratings = new ArrayList<>();
+	ArrayList<File> files = new ArrayList<>();
+	ArrayList<Integer> ratings = new ArrayList<>();
 
 	private MainView mainView;
 	private LayoutView layoutView;
 	private BarView barView;
 
-	public JFrame mainFrame;
+	JFrame mainFrame;
 
-	public boolean isGridView;
+	boolean isGridView;
 	private int filterRating;
 
 	// set the view observer
-	public void addLayoutView(LayoutView view) {
+	void addLayoutView(LayoutView view) {
 		layoutView = view;
 		isGridView = true;
 	}
 
-	public void addMainView(MainView view) {
+	void addMainView(MainView view) {
 		mainView = view;
 	}
 
-	public void addBarView(BarView view) {
+	void addBarView(BarView view) {
 		barView = view;
 	}
 
-	public void addMainFrame(JFrame frame) {
+	void addMainFrame(JFrame frame) {
 		mainFrame = frame;
 	}
 
-	public void switchLayout() {
+	void switchLayout() {
 		isGridView = !isGridView;
 		layoutView.updateView(isGridView, filterRating);
 	}
 
-	public void updateLayout() {
+	void updateLayout() {
 		layoutView.updateView(isGridView, filterRating);
 	}
-	public void addFile(File[] images) {
+	void addFile(File[] images) {
 		for (File file: images) {
 			if (file.getName().endsWith(".jpg") || file.getName().endsWith(".png")) {
 				files.add(file);
@@ -59,7 +55,7 @@ public class Model {
 		layoutView.updateView(isGridView, filterRating);
 	}
 
-	public void updateRating(File image, int rating) {
+	void updateRating(File image, int rating) {
 		if (files.contains(image)) {
 			ratings.set(files.indexOf(image), rating);
 		} else {
@@ -67,7 +63,7 @@ public class Model {
 		}
 	}
 
-	public void filter(int rating) {
+	void filter(int rating) {
 		filterRating = rating;
 		layoutView.updateView(isGridView, filterRating);
 	}

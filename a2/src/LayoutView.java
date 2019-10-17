@@ -1,7 +1,3 @@
-// HelloMVC: a simple MVC example
-// the model is just a counter
-// inspired by code by Joseph Mack, http://www.austintek.com/mvc/
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -10,17 +6,14 @@ import java.util.ArrayList;
 
 class LayoutView extends JPanel {
 
-	// the model that this view is showing
-	private Model model;
+	private Model 				 model;
 	private ArrayList<ImageView> imageList;
-	private int columns = 3;
-	private boolean isGrid;
+	private int 				 columns = 3;
+	private boolean 			 isGrid;
 
-	public LayoutView(Model model) {
+	LayoutView(Model model) {
 		imageList = new ArrayList<>();
-		// a GridBagLayout with default constraints centres
-		// the widget in the window
-		this.setPreferredSize(new Dimension(500, 950));
+		this.setPreferredSize(new Dimension(500, 550));
 		this.setLayout(null);
 		this.setBackground(Color.white);
 		this.setBorder(BorderFactory.createEmptyBorder());
@@ -46,7 +39,6 @@ class LayoutView extends JPanel {
 					}
 				}
 			}
-
 			@Override
 			public void componentMoved(ComponentEvent e) {
 			}
@@ -59,8 +51,7 @@ class LayoutView extends JPanel {
 		});
 	}
 
-	// IView interface
-	public void updateView(boolean isGridView, int rating) {
+	void updateView(boolean isGridView, int rating) {
 		imageList.clear();
 		isGrid = isGridView;
 		for (File file: model.files) {
@@ -69,7 +60,6 @@ class LayoutView extends JPanel {
 				imageList.add(imageView);
 			}
 		}
-
 		if (isGridView) {
 			updateGridColumns();
 		} else {
@@ -77,7 +67,7 @@ class LayoutView extends JPanel {
 		}
 	}
 
-	public void updateGridColumns() {
+	private void updateGridColumns() {
 		int leftInset = 50;
 		int topInset = 50;
 		int imageInset = 50;
@@ -117,7 +107,7 @@ class LayoutView extends JPanel {
 		this.revalidate();
 	}
 
-	public void updateListColumns() {
+	private void updateListColumns() {
 		int leftInset = 50;
 		int topInset = 25;
 		int imageInset = 25;
@@ -125,7 +115,6 @@ class LayoutView extends JPanel {
 
 		this.removeAll();
 		this.repaint();
-
 
 		this.setPreferredSize(new Dimension(500, 250*(imageList.size())));
 
@@ -141,7 +130,6 @@ class LayoutView extends JPanel {
 			divider.setBounds(305, topInset - imageInset, 1500, 1);
 			divider.setBorder(BorderFactory.createLineBorder(Color.lightGray, 1));
 			topInset += viewHeight + imageInset*2;
-
 		}
 		this.revalidate();
 	}

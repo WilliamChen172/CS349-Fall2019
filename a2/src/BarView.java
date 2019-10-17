@@ -3,39 +3,45 @@ import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 
-public class BarView extends JPanel {
+class BarView extends JPanel {
 
-	private JButton gridButton;
-	private JButton listButton;
-	private JLabel       nameLabel;
-	private JButton 	 importButton;
-	private JLabel  	 filterLabel;
+	private JButton 			 gridButton;
+	private JButton 			 listButton;
+	private JLabel       		 nameLabel;
+	private JButton 	  		 importButton;
+	private JButton              clearImageButton;
+	private JLabel  	         filterLabel;
 	private ArrayList<JButton> 	 filter;
-	private JFileChooser fileChooser;
-	private JButton clearButton;
+	private JFileChooser 		 fileChooser;
+	private JButton 			 clearFilterButton;
 
-	private Model model;
+	private Model 				 model;
 
-	private ImageIcon gridOnIcon = new ImageIcon("./src/UI/grid_on.png");
-	private ImageIcon gridOffIcon = new ImageIcon("./src/UI/grid_off.png");
-	private ImageIcon listOnIcon = new ImageIcon("./src/UI/list_on.png");
-	private ImageIcon listOffIcon = new ImageIcon("./src/UI/list_off.png");
-	private ImageIcon importIcon = new ImageIcon("./src/UI/import.png");
-	private ImageIcon clearIcon = new ImageIcon("./src/UI/clear.png");
+	private ImageIcon gridOnIcon =    new ImageIcon("./src/UI/grid_on.png");
+	private ImageIcon gridOffIcon =   new ImageIcon("./src/UI/grid_off.png");
+	private ImageIcon listOnIcon =    new ImageIcon("./src/UI/list_on.png");
+	private ImageIcon listOffIcon =   new ImageIcon("./src/UI/list_off.png");
+	private ImageIcon importIcon =    new ImageIcon("./src/UI/import.png");
+	private ImageIcon clearIcon =     new ImageIcon("./src/UI/clear_image.png");
 	private ImageIcon emptyStarIcon = new ImageIcon("./src/UI/star_empty.png");
-	private ImageIcon fullStarIcon = new ImageIcon("./src/UI/star_full.png");
+	private ImageIcon fullStarIcon =  new ImageIcon("./src/UI/star_full.png");
 
 
-	public BarView(Model model) {
+	BarView(Model model) {
 		// set layout for the whole panel
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		this.setPreferredSize(new Dimension(1150, 50));
 		this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 
-		// create the layout toggle buttons
+		// set the model
+		this.model = model;
+
+		// create Grid and List toggle buttons
 		gridButton = new JButton(gridOnIcon);
 		listButton = new JButton(listOffIcon);
 		gridButton.setMaximumSize(new Dimension(50, 40));
@@ -66,7 +72,8 @@ public class BarView extends JPanel {
 		});
 
 		// create the display name of the application
-		nameLabel = new JLabel("Fotag");
+		nameLabel = new JLabel("Fotag!");
+		nameLabel.setFont(new Font("SanSerif", Font.PLAIN, 27));
 
 		// create the import button
 		importButton = new JButton(importIcon);
@@ -80,11 +87,15 @@ public class BarView extends JPanel {
 					File[] files = fileChooser.getSelectedFiles();
 					model.addFile(files);
 				} else {
+					System.err.println("Failed to open this file.");
 				}
 			}
 		});
-		// create the filter part
-		filterLabel = new JLabel("Filter by: ");
+
+		// create the filter label and view
+		filterLabel = new JLabel("Filter by:");
+		filterLabel.setFont(new Font("SanSerif", Font.PLAIN, 21));
+		filterLabel.setForeground(Color.darkGray);
 		filter = new ArrayList<>();
 		for (int i = 0; i < 5; i++) {
 			JButton star = new JButton(emptyStarIcon);
@@ -106,10 +117,10 @@ public class BarView extends JPanel {
 			});
 		}
 
-		// create clear button
-		clearButton = new JButton(clearIcon);
-		clearButton.setBorder(BorderFactory.createEmptyBorder());
-		clearButton.addActionListener(new ActionListener() {
+		// create clear images button
+		clearImageButton = new JButton(clearIcon);
+		clearImageButton.setBorder(BorderFactory.createEmptyBorder());
+		clearImageButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				model.files.clear();
@@ -117,32 +128,51 @@ public class BarView extends JPanel {
 			}
 		});
 
+		// create clear filter button
+		clearFilterButton = new JButton("Clear");
+		clearFilterButton.setForeground(Color.darkGray);
+		clearFilterButton.setFont(new Font("SanSerif", Font.PLAIN, 18));
+		clearFilterButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for (JButton star: filter) {
+					star.setIcon(emptyStarIcon);
+				}
+				model.filter(0);
+			}
+		});
+		clearFilterButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				clearFilterButton.setForeground(Color.lightGray);
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				clearFilterButton.setForeground(Color.darkGray);
+			}
+		});
+		clearFilterButton.setBorder(BorderFactory.createEmptyBorder());
+
 		// add every component to the panel
 		this.add(Box.createRigidArea(new Dimension(10, 0)));
 		this.add(gridButton);
-		//this.add(Box.createRigidArea(new Dimension(10, 0)));
 		this.add(listButton);
 		this.add(Box.createRigidArea(new Dimension(20, 0)));
 		this.add(nameLabel);
-		this.add(Box.createHorizontalGlue());
-		this.add(importButton);
 		this.add(Box.createRigidArea(new Dimension(20, 0)));
+		this.add(importButton);
+		this.add(Box.createHorizontalGlue());
+		this.add(clearImageButton);
+		this.add(Box.createRigidArea(new Dimension(10, 0)));
 		this.add(filterLabel);
 		this.add(Box.createRigidArea(new Dimension(10, 0)));
 		for (JButton star: filter) {
 			this.add(star);
-			//this.add(Box.createRigidArea(new Dimension(5, 0)));
 		}
 		this.add(Box.createRigidArea(new Dimension(10, 0)));
-		this.add(clearButton);
+		this.add(clearFilterButton);
 		this.add(Box.createRigidArea(new Dimension(10, 0)));
-
-		// create the view UI
-//		gridButton.setMaximumSize(new Dimension(100, 100));
-//		gridButton.setPreferredSize(new Dimension(100, 50));
-
-		// set the model
-		this.model = model;
 
 	}
 }
