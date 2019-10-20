@@ -7,12 +7,16 @@ import java.util.ArrayList;
 class LayoutView extends JPanel {
 
 	private Model 				 model;
-	private ArrayList<ImageView> imageList;
+	private ArrayList<ImageView> listList;
+	private ArrayList<ImageView> gridList;
 	private int 				 columns = 3;
 	private boolean 			 isGrid;
+	private int 				 filter;
 
 	LayoutView(Model model) {
-		imageList = new ArrayList<>();
+		listList = new ArrayList<>();
+		gridList = new ArrayList<>();
+		isGrid = true;
 		this.setPreferredSize(new Dimension(500, 550));
 		this.setLayout(null);
 		this.setBackground(Color.white);
@@ -51,20 +55,33 @@ class LayoutView extends JPanel {
 		});
 	}
 
-	void updateView(boolean isGridView, int rating) {
-		imageList.clear();
+	void updateView(boolean isGridView) {
 		isGrid = isGridView;
-		for (File file: model.files) {
-			if (model.ratings.get(model.files.indexOf(file)) >= rating) {
-				ImageView imageView = new ImageView(file, model, isGridView, model.ratings.get(model.files.indexOf(file)));
-				imageList.add(imageView);
-			}
-		}
-		if (isGridView) {
+		if (isGrid) {
 			updateGridColumns();
 		} else {
 			updateListColumns();
 		}
+	}
+
+	void addImageView(File file) {
+		int fileIndex = model.files.indexOf(file);
+		ImageView gridView = new ImageView(file, model, true, model.ratings.get(fileIndex));
+		ImageView listView = new ImageView(file, model, false, model.ratings.get(fileIndex));
+		gridList.add(gridView);
+		listList.add(listView);
+		updateView(isGrid);
+	}
+
+	void filterImage(int rating) {
+		filter = rating;
+		updateView(isGrid);
+	}
+
+	void clearAll() {
+		gridList.clear();
+		listList.clear();
+		updateView(isGrid);
 	}
 
 	private void updateGridColumns() {
@@ -78,31 +95,32 @@ class LayoutView extends JPanel {
 		this.removeAll();
 		this.repaint();
 
-		if (imageList.size() % columns > 0) {
-			totalRows = imageList.size() / columns + 1;
+		if (gridList.size() % columns > 0) {
+			totalRows = gridList.size() / columns + 1;
 		} else {
-			totalRows = imageList.size() / columns;
+			totalRows = gridList.size() / columns;
 		}
 
 		this.setPreferredSize(new Dimension(500, imageInset*(totalRows+1) + 400*(totalRows)));
 
-		for (ImageView imageView: imageList) {
-			Dimension size = imageView.getPreferredSize();
-			int viewWidth = size.width;
-			int viewHeight = size.height;
-			this.add(imageView);
+		for (ImageView imageView: gridList) {
+			if (imageView.rating >= filter) {
+				Dimension size = imageView.getPreferredSize();
+				int viewWidth = size.width;
+				int viewHeight = size.height;
+				this.add(imageView);
 
-			imageView.setBounds(leftInset + insets.left, topInset + insets.top, size.width, size.height);
-			nextRow++;
+				imageView.setBounds(leftInset + insets.left, topInset + insets.top, size.width, size.height);
+				nextRow++;
 
-			if (nextRow < columns) {
-				leftInset += viewWidth + imageInset;
-			} else {
-				leftInset = imageInset;
-				topInset += viewHeight + imageInset;
-				nextRow = 0;
+				if (nextRow < columns) {
+					leftInset += viewWidth + imageInset;
+				} else {
+					leftInset = imageInset;
+					topInset += viewHeight + imageInset;
+					nextRow = 0;
+				}
 			}
-
 		}
 		this.revalidate();
 	}
@@ -116,20 +134,22 @@ class LayoutView extends JPanel {
 		this.removeAll();
 		this.repaint();
 
-		this.setPreferredSize(new Dimension(500, 250*(imageList.size())));
+		this.setPreferredSize(new Dimension(500, 250*(listList.size())));
 
-		for (ImageView imageView: imageList) {
-			Dimension size = imageView.getPreferredSize();
-			int viewWidth = size.width;
-			int viewHeight = size.height;
-			this.add(imageView);
+		for (ImageView imageView: listList) {
+			if (imageView.rating >= filter) {
+				Dimension size = imageView.getPreferredSize();
+				int viewWidth = size.width;
+				int viewHeight = size.height;
+				this.add(imageView);
 
-			imageView.setBounds(leftInset + insets.left, topInset + insets.top, size.width, size.height);
-			JPanel divider = new JPanel();
-			this.add(divider);
-			divider.setBounds(305, topInset - imageInset, 1500, 1);
-			divider.setBorder(BorderFactory.createLineBorder(Color.lightGray, 1));
-			topInset += viewHeight + imageInset*2;
+				imageView.setBounds(leftInset + insets.left, topInset + insets.top, size.width, size.height);
+				JPanel divider = new JPanel();
+				this.add(divider);
+				divider.setBounds(305, topInset - imageInset, 1500, 1);
+				divider.setBorder(BorderFactory.createLineBorder(Color.lightGray, 1));
+				topInset += viewHeight + imageInset * 2;
+			}
 		}
 		this.revalidate();
 	}

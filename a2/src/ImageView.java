@@ -38,7 +38,7 @@ class ImageView extends JPanel {
 	private ImageIcon emptyStarSmall = new ImageIcon("./src/UI/star_empty_small.png");
 	private ImageIcon fullStarSmall =  new ImageIcon("./src/UI/star_full_small.png");
 
-	private int 	rating;
+	public int 	rating;
 	private boolean isGrid;
 	private boolean isPreview;
 
@@ -313,11 +313,7 @@ class ImageView extends JPanel {
 				scaledWidth = 500;
 			}
 			// creates output image
-			BufferedImage outputImage = new BufferedImage(scaledWidth, scaledHeight, inputImage.getType());
-			// scales the input image to the output image
-			Graphics2D g2d = outputImage.createGraphics();
-			g2d.drawImage(inputImage, 0, 0, scaledWidth, scaledHeight, null);
-			g2d.dispose();
+			Image outputImage = originalImage.getImage().getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_DEFAULT);
 			previewImage = new ImageIcon(outputImage);
 		} catch (IOException exception) {
 			System.out.println("Exception handled when trying to read file " + imageName + exception.getMessage());
@@ -368,11 +364,7 @@ class ImageView extends JPanel {
 				}
 			}
 			// creates output image
-			BufferedImage outputImage = new BufferedImage(scaledWidth, scaledHeight, inputImage.getType());
-			// scales the input image to the output image
-			Graphics2D g2d = outputImage.createGraphics();
-			g2d.drawImage(inputImage, 0, 0, scaledWidth, scaledHeight, null);
-			g2d.dispose();
+			Image outputImage = originalImage.getImage().getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_DEFAULT);
 			thumbnailImage = new ImageIcon(outputImage);
 		} catch (IOException exception) {
 			System.out.println("Exception handled when trying to read file " + imageName + exception.getMessage());

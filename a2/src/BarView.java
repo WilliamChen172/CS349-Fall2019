@@ -101,7 +101,6 @@ class BarView extends JPanel {
 			JButton star = new JButton(emptyStarIcon);
 			star.setBorder(BorderFactory.createEmptyBorder());
 			filter.add(star);
-			int rating = i+1;
 			star.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -123,8 +122,7 @@ class BarView extends JPanel {
 		clearImageButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				model.files.clear();
-				model.updateLayout();
+				model.clearAll();
 			}
 		});
 

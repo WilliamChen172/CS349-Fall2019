@@ -37,22 +37,19 @@ class Model {
 
 	void switchLayout() {
 		isGridView = !isGridView;
-		layoutView.updateView(isGridView, filterRating);
+		layoutView.updateView(isGridView);
 	}
 
-	void updateLayout() {
-		layoutView.updateView(isGridView, filterRating);
-	}
 	void addFile(File[] images) {
 		for (File file: images) {
-			if (file.getName().endsWith(".jpg") || file.getName().endsWith(".png")) {
+			if (file.getName().endsWith(".jpg") || file.getName().endsWith(".png") || file.getName().endsWith(".gif")) {
 				files.add(file);
 				ratings.add(0);
+				layoutView.addImageView(file);
 			} else {
 				System.err.println("This file type is not supported.");
 			}
 		}
-		layoutView.updateView(isGridView, filterRating);
 	}
 
 	void updateRating(File image, int rating) {
@@ -65,6 +62,11 @@ class Model {
 
 	void filter(int rating) {
 		filterRating = rating;
-		layoutView.updateView(isGridView, filterRating);
+		layoutView.filterImage(filterRating);
+	}
+
+	void clearAll() {
+		files.clear();
+		layoutView.clearAll();
 	}
 }
