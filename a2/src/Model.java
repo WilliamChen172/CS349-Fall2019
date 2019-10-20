@@ -14,8 +14,20 @@ class Model {
 
 	JFrame mainFrame;
 
-	boolean isGridView;
+	private boolean isGridView;
+	boolean isGridView() {
+		return isGridView;
+	}
+
 	private int filterRating;
+	int getFilterRating() {
+		return filterRating;
+	}
+	void setFilterRating(int rating) {
+		filterRating = rating;
+		barView.updateFilter();
+		layoutView.setFilter(filterRating);
+	}
 
 	// set the view observer
 	void addLayoutView(LayoutView view) {

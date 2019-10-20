@@ -51,7 +51,7 @@ class BarView extends JPanel {
 		gridButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!model.isGridView) {
+				if (!model.isGridView()) {
 					gridButton.setIcon(gridOnIcon);
 					listButton.setIcon(listOffIcon);
 					model.switchLayout();
@@ -62,7 +62,7 @@ class BarView extends JPanel {
 		listButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (model.isGridView) {
+				if (model.isGridView()) {
 					listButton.setIcon(listOnIcon);
 					gridButton.setIcon(gridOffIcon);
 					model.switchLayout();
@@ -172,5 +172,15 @@ class BarView extends JPanel {
 		this.add(clearFilterButton);
 		this.add(Box.createRigidArea(new Dimension(10, 0)));
 
+	}
+
+	void updateFilter() {
+		for (int i = 0; i < 5; i++) {
+			if (i < model.getFilterRating()) {
+				filter.get(i).setIcon(fullStarIcon);
+			} else {
+				filter.get(i).setIcon(emptyStarIcon);
+			}
+		}
 	}
 }

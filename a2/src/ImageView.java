@@ -271,6 +271,10 @@ class ImageView extends JPanel {
 		}
 	}
 
+	void updateRating() {
+		updateRating(rating);
+	}
+
 	private void updateRating(int rating) {
 		for (int j = 0; j < rating; j++) {
 			if (isGrid && !isPreview) {

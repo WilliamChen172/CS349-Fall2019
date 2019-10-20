@@ -90,21 +90,17 @@ class LayoutView extends JPanel {
 		int imageInset = 50;
 		int nextRow = 0;
 		int totalRows;
+		int totalDisplay = 0;
 		Insets insets = this.getInsets();
 
 		this.removeAll();
 		this.repaint();
 
-		if (gridList.size() % columns > 0) {
-			totalRows = gridList.size() / columns + 1;
-		} else {
-			totalRows = gridList.size() / columns;
-		}
-
-		this.setPreferredSize(new Dimension(500, imageInset*(totalRows+1) + 400*(totalRows)));
-
 		for (ImageView imageView: gridList) {
+			imageView.rating = model.ratings.get(gridList.indexOf(imageView));
+			imageView.updateRating();
 			if (imageView.rating >= filter) {
+				totalDisplay++;
 				Dimension size = imageView.getPreferredSize();
 				int viewWidth = size.width;
 				int viewHeight = size.height;
@@ -122,6 +118,15 @@ class LayoutView extends JPanel {
 				}
 			}
 		}
+
+		if (totalDisplay % columns > 0) {
+			totalRows = totalDisplay / columns + 1;
+		} else {
+			totalRows = totalDisplay / columns;
+		}
+
+		this.setPreferredSize(new Dimension(500, imageInset*(totalRows+1) + 400*(totalRows)));
+
 		this.revalidate();
 	}
 
@@ -129,15 +134,17 @@ class LayoutView extends JPanel {
 		int leftInset = 50;
 		int topInset = 25;
 		int imageInset = 25;
+		int totalDisplay = 0;
 		Insets insets = this.getInsets();
 
 		this.removeAll();
 		this.repaint();
 
-		this.setPreferredSize(new Dimension(500, 250*(listList.size())));
-
 		for (ImageView imageView: listList) {
+			imageView.rating = model.ratings.get(listList.indexOf(imageView));
+			imageView.updateRating();
 			if (imageView.rating >= filter) {
+				totalDisplay++;
 				Dimension size = imageView.getPreferredSize();
 				int viewWidth = size.width;
 				int viewHeight = size.height;
@@ -151,6 +158,13 @@ class LayoutView extends JPanel {
 				topInset += viewHeight + imageInset * 2;
 			}
 		}
+
+		this.setPreferredSize(new Dimension(500, 250*(totalDisplay)));
+
 		this.revalidate();
+	}
+
+	void setFilter(int filter) {
+		this.filter = filter;
 	}
 }

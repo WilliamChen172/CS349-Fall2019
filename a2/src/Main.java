@@ -30,7 +30,7 @@ public class Main {
 		frame.addComponentListener(new ComponentListener() {
 			@Override
 			public void componentResized(ComponentEvent e) {
-				if (model.isGridView) {
+				if (model.isGridView()) {
 					frame.setMinimumSize(new Dimension(420, 550));
 				} else {
 					frame.setMinimumSize(new Dimension(1120, 300));
@@ -46,12 +46,15 @@ public class Main {
 			public void componentHidden(ComponentEvent e) {
 			}
 		});
+
+		// read any saved information
 		if (savedList.exists()) {
 			try(BufferedReader reader = new BufferedReader(new FileReader(savedList))) {
 				String line;
 				int size = 0;
 				File[] files;
 				ArrayList<Integer> ratings;
+				int filter = 0;
 				if ((line = reader.readLine()) != null) {
 					size = Integer.parseInt(line);
 					files = new File[size];
@@ -64,7 +67,11 @@ public class Main {
 							ratings.add(Integer.parseInt(line));
 						}
 					}
+					if ((line = reader.readLine()) != null) {
+						filter = Integer.parseInt(line);
+					}
 					model.ratings = ratings;
+					model.setFilterRating(filter);
 					model.addFile(files);
 				}
 			} catch (IOException e) {
@@ -74,6 +81,7 @@ public class Main {
 		} else {
 			savedList.createNewFile();
 		}
+
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -86,6 +94,7 @@ public class Main {
 						writer.write(model.files.get(i) + "\n");
 						writer.write(model.ratings.get(i) + "\n");
 					}
+					writer.write(model.getFilterRating() + "\n");
 					writer.close();
 				} catch (IOException ex) {
 					// TODO
