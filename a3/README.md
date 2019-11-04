@@ -9,3 +9,9 @@ in the makefile
 My enhancement feature is adding graphics texture to the game.
 Because of assets loading when the game starts, it could be 
 a little slow when you start the game.
+
+Tapping R when running the game takes the user back
+to the home screen and resets the game. The user will
+have to start again. Tapping Q displays the high score
+screen and the user has the option to restart the game
+from there.

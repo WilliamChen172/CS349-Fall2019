@@ -108,4 +108,20 @@ class Cell {
 	void paintSnakeBody(GraphicsContext gc) {
 		gc.drawImage(snakeBody, xPoint, yPoint, size, size);
 	}
+
+	void paintLeftDown(GraphicsContext gc) {
+		gc.drawImage(leftDown, xPoint, yPoint, size, size);
+	}
+
+	void paintLeftUp(GraphicsContext gc) {
+		gc.drawImage(leftUp, xPoint, yPoint, size, size);
+	}
+
+	void paintRightDown(GraphicsContext gc) {
+		gc.drawImage(rightDown, xPoint, yPoint, size, size);
+	}
+
+	void paintRightUp(GraphicsContext gc) {
+		gc.drawImage(rightUp, xPoint, yPoint, size, size);
+	}
 }

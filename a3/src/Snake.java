@@ -136,12 +136,55 @@ class Snake {
 	void paint(GraphicsContext gc) {
 		paintFruits(gc);
 		head.paintHead(gc, direction);
-		tail.paintSnakeBody(gc);
+		Cell last;
+		if (body.size() > 0) {
+			last = body.get(body.size() - 1);
+		} else {
+			last = head;
+		}
+			if (last.xPoint > tail.xPoint) {
+				tail.paintTail(gc, Directions.Right);
+			} else if (last.xPoint < tail.xPoint) {
+				tail.paintTail(gc, Directions.Left);
+			} else if (last.yPoint > tail.yPoint) {
+				tail.paintTail(gc, Directions.Down);
+			} else if (last.yPoint < tail.yPoint) {
+				tail.paintTail(gc, Directions.Up);
+			}
 		if (oldTail != null) {
 			oldTail.paint(gc, false);
 		}
 		for (Cell cell : body) {
-			cell.paintSnakeBody(gc);
+			Cell prev;
+			Cell next;
+			if (body.size() == 1) {
+				prev =  head;
+				next = tail;
+			} else if (body.indexOf(cell) == 0) {
+				prev = head;
+				next = body.get(body.indexOf(cell) + 1);
+			} else if (body.indexOf(cell) == body.size() - 1) {
+				prev = body.get(body.indexOf(cell) - 1);
+				next = tail;
+			} else {
+				prev = body.get(body.indexOf(cell) - 1);
+				next = body.get(body.indexOf(cell) + 1);
+			}
+			if ((prev.xPoint < next.xPoint && prev.yPoint < next.yPoint && cell.yPoint == prev.yPoint) ||
+					(prev.xPoint > next.xPoint && prev.yPoint > next.yPoint && cell.yPoint == next.yPoint)) {
+				cell.paintLeftDown(gc);
+			} else if ((prev.xPoint < next.xPoint && prev.yPoint > next.yPoint && cell.yPoint == prev.yPoint) ||
+					(prev.xPoint > next.xPoint && prev.yPoint < next.yPoint && cell.yPoint == next.yPoint)) {
+				cell.paintLeftUp(gc);
+			} else if ((prev.xPoint < next.xPoint && prev.yPoint > next.yPoint && cell.yPoint == next.yPoint) ||
+					(prev.xPoint > next.xPoint && prev.yPoint < next.yPoint && cell.yPoint == prev.yPoint)) {
+				cell.paintRightUp(gc);
+			} else if ((prev.xPoint < next.xPoint && prev.yPoint < next.yPoint && cell.yPoint == next.yPoint) ||
+					(prev.xPoint > next.xPoint && prev.yPoint > next.yPoint && cell.yPoint == prev.yPoint)) {
+				cell.paintRightDown(gc);
+			} else {
+				cell.paintSnakeBody(gc);
+			}
 		}
 	}
 
