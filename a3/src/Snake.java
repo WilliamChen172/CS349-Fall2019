@@ -135,22 +135,19 @@ class Snake {
 
 	void paint(GraphicsContext gc) {
 		paintFruits(gc);
-		gc.setFill(Color.YELLOW);
-		head.paint(gc, true, false);
-		tail.paint(gc, true, false);
+		head.paintHead(gc, direction);
+		tail.paintSnakeBody(gc);
 		if (oldTail != null) {
-			oldTail.paint(gc, false, false);
+			oldTail.paint(gc, false);
 		}
-		gc.setFill(Color.BLACK);
 		for (Cell cell : body) {
-			cell.paint(gc, true, false);
+			cell.paintSnakeBody(gc);
 		}
 	}
 
 	private void paintFruits(GraphicsContext gc) {
-		gc.setFill(Color.ORANGE);
 		for (Cell fruit : fruits) {
-			fruit.paint(gc, false, true);
+			fruit.paint(gc, true);
 		}
 	}
 

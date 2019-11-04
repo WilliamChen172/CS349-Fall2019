@@ -55,10 +55,10 @@ class Map extends Canvas {
 
 	void paint() {
 		for (Cell cell : cells) {
-			cell.paint(gc, false, false);
+			cell.paint(gc, false);
 		}
 		for (Cell fruit : currentFruit) {
-			fruit.paint(gc, false, true);
+			fruit.paint(gc, true);
 		}
 		snake.paint(gc);
 	}

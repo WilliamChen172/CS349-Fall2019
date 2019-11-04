@@ -5,3 +5,7 @@ macOS 10.15 (MacBook Pro 2015)
 
 Please replace $(JAVA_FX_HOME) with your javafx library
 in the makefile
+
+My enhancement feature is adding graphics texture to the game.
+Because of assets loading when the game starts, it could be 
+a little slow when you start the game.
