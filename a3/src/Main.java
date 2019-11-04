@@ -5,18 +5,24 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.canvas.*;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 
 public class Main extends Application {
     private static final int width = 1280;
     private static final int height = 800;
+    private static final String title = "SNAKE";
+    private static final String created = "Created by";
     private static final String name = "William Chen";
     private static final String userid = "w279chen";
-    private static final String description = "Use the arrow keys to move around and eat fruit to get bigger!";
-    private static final String startInstruction = "Press Q to exit.\nPress any other key to continue";
+    private static final String description = "Use the arrow keys to move around and eat fruit to get bigger.\n" +
+                                              "Use number keys 1, 2 and 3 to navigate through different levels.\n" +
+                                              "Press R to reset to this screen. \n" +
+                                              "Press P to pause and unpause the game.";
+    private static final String startInstruction = "Press Q to exit.\nPress any other key to start.";
     private static final String gameover = "Game Over";
-    private static final String exitInstruction = "Press R to restart. Press any other key to exit";
+    private static final String exitInstruction = "Press R to restart. Press any other key to exit.";
 
     private GraphicsContext context;
     private Runner runner;
@@ -34,6 +40,8 @@ public class Main extends Application {
         mainStage.setMaxWidth(width);
 
         AnchorPane menuPane = new AnchorPane();
+        Label title = new Label(Main.title);
+        Label createdBy = new Label(Main.created);
         Label name = new Label(Main.name);
         Label userid = new Label(Main.userid);
         Label description = new Label(Main.description);
@@ -85,6 +93,7 @@ public class Main extends Application {
                         display.updateLevel(1);
                         display.updateClock(30);
                         runner.resetClock();
+                        runner.updateInterval(1);
                     }
                     break;
                 case DIGIT2:
@@ -93,6 +102,7 @@ public class Main extends Application {
                         display.updateLevel(2);
                         display.updateClock(30);
                         runner.resetClock();
+                        runner.updateInterval(2);
                     }
                     break;
                 case DIGIT3:
@@ -100,6 +110,7 @@ public class Main extends Application {
                         map.updateLevel(3);
                         display.updateLevel(3);
                         display.updateClock(-1);
+                        runner.updateInterval(3);
                     }
                     break;
                 case Q:
@@ -118,7 +129,7 @@ public class Main extends Application {
         map.setGraphicsContext(context);
         map.paint();
 
-        menuPane.getChildren().addAll(name, userid, description, instruction);
+        menuPane.getChildren().addAll(title, createdBy, name, userid, description, instruction);
         menuPane.requestFocus();
         menuPane.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.Q) {
@@ -163,14 +174,24 @@ public class Main extends Application {
                 listener.start();
             }
         });
-        AnchorPane.setLeftAnchor(name, 400.0);
-        AnchorPane.setTopAnchor(name, 300.0);
-        AnchorPane.setLeftAnchor(userid, 400.0);
-        AnchorPane.setTopAnchor(userid, 350.0);
+        title.setFont(new Font(70));
+        AnchorPane.setLeftAnchor(title, 535.0);
+        AnchorPane.setTopAnchor(title, 100.0);
+        createdBy.setFont(new Font(20));
+        AnchorPane.setLeftAnchor(createdBy, 590.0);
+        AnchorPane.setTopAnchor(createdBy, 250.0);
+        name.setFont(new Font(30));
+        AnchorPane.setLeftAnchor(name, 560.0);
+        AnchorPane.setTopAnchor(name, 280.0);
+        userid.setFont(new Font(30));
+        AnchorPane.setLeftAnchor(userid, 575.0);
+        AnchorPane.setTopAnchor(userid, 320.0);
+        description.setFont(new Font(20));
         AnchorPane.setLeftAnchor(description, 400.0);
         AnchorPane.setTopAnchor(description, 400.0);
+        instruction.setFont(new Font(20));
         AnchorPane.setLeftAnchor(instruction, 400.0);
-        AnchorPane.setTopAnchor(instruction, 450.0);
+        AnchorPane.setTopAnchor(instruction, 550.0);
 
         gamePane.getChildren().addAll(display, map);
         AnchorPane.setLeftAnchor(map, 280.0);
@@ -179,12 +200,15 @@ public class Main extends Application {
         AnchorPane.setTopAnchor(display, 0.0);
 
         endPane.getChildren().addAll(gameover, score, exitInstr);
+        gameover.setFont(new Font(100));
         AnchorPane.setLeftAnchor(gameover, 400.0);
-        AnchorPane.setTopAnchor(gameover, 300.0);
-        AnchorPane.setLeftAnchor(score, 400.0);
+        AnchorPane.setTopAnchor(gameover, 200.0);
+        score.setFont(new Font(60));
+        AnchorPane.setLeftAnchor(score, 450.0);
         AnchorPane.setTopAnchor(score, 350.0);
-        AnchorPane.setLeftAnchor(exitInstr, 400.0);
-        AnchorPane.setTopAnchor(exitInstr, 400.0);
+        exitInstr.setFont(new Font(20));
+        AnchorPane.setLeftAnchor(exitInstr, 450.0);
+        AnchorPane.setTopAnchor(exitInstr, 500.0);
         endPane.requestFocus();
         endPane.setOnKeyPressed(event -> {
             KeyCode code = event.getCode();

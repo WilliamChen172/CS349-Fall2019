@@ -8,6 +8,10 @@ public class Runner implements Runnable {
 	private static final int level1 = 1;
 	private static final int level2 = 2;
 	private static final int level3 = 3;
+	private static final int level1speed = 15;
+	private static final int level2speed = 20;
+	private static final int level3speed = 25;
+	private static final float oneSecond = 1000.0f;
 
 	private Map map;
 	private Display display;
@@ -26,8 +30,8 @@ public class Runner implements Runnable {
 	Runner(Map map, Display display) {
 		this.map = map;
 		this.display = display;
-		frameRate = 15;
-		interval = 1000.0f / frameRate; // 1000 ms in a second
+		frameRate = level1speed;
+		interval = oneSecond / frameRate;
 		isRunning = true;
 		curDirection = Directions.Right;
 		frameTimer = 0;
@@ -80,8 +84,7 @@ public class Runner implements Runnable {
 								display.updateScore(score);
 							}
 						});
-						frameRate += 5;
-						interval = 1000.0f / frameRate;
+						updateInterval(level2);
 					} else if (clock == 0 && map.getLevel() == level2) {
 						map.updateLevel(level3);
 						score += levelScore;
@@ -94,8 +97,7 @@ public class Runner implements Runnable {
 								display.updateScore(score);
 							}
 						});
-						frameRate += 5;
-						interval = 1000.0f / frameRate;
+						updateInterval(level3);
 					}
 					frameTimer = 0;
 				}
@@ -143,5 +145,16 @@ public class Runner implements Runnable {
 
 	int getScore() {
 		return score;
+	}
+
+	void updateInterval(int level) {
+		if (level == 1) {
+			frameRate = level1speed;
+		} else if (level == 2) {
+			frameRate = level2speed;
+		} else if (level == 3) {
+			frameRate = level3speed;
+		}
+		interval = oneSecond/frameRate;
 	}
 }
