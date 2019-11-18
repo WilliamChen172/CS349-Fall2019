@@ -5,4 +5,4 @@ Android SDK API 29
 macOS 10.15 (MacBook Pro 2015)
 
 Enhancements: Save/export using the native share screen
-Icon resources used from https://icons8.com 
+Icon resources used from https://icons8.com

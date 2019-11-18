@@ -70,10 +70,8 @@ public class Rectangle extends Drawable {
             tempy = starty;
             height = endy - starty;
         }
-        Matrix oldMatrix = canvas.getMatrix();
-        canvas.setMatrix(matrix);
+
         paint.setColor(color);
         canvas.drawRect(tempx, tempy, tempx + width, tempy + height, paint);
-        canvas.setMatrix(oldMatrix);
     }
 }

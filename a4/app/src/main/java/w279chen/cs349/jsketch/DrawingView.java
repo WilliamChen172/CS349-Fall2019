@@ -15,9 +15,6 @@ public class DrawingView extends View {
         RECT,
         CIRCLE,
         LINE,
-        COLOUR1,
-        COLOUR2,
-        COLOUR3
     }
 
     Drawable drawable;
@@ -57,6 +54,7 @@ public class DrawingView extends View {
         brush.setColor(selectedColor);
         if (drawable != null) {
             model.drawables.get(model.drawables.indexOf(model.selected)).setColor(selectedColor);
+            model.updateCurrentColor(selectedColor);
             invalidate();
         }
     }

@@ -4,7 +4,6 @@ package w279chen.cs349.jsketch;
 import java.util.ArrayList;
 
 class Model {
-    // Create static instance of this mModel
     private static final Model ourInstance = new Model();
 
     static Model getInstance() {

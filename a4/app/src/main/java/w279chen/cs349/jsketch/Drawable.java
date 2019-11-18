@@ -10,11 +10,8 @@ abstract class Drawable {
     boolean isDrawable;
     int color;
 
-    Matrix matrix = new Matrix(); // identity matrix
-
     void setEndPoint(float x, float y) {endx = x; endy = y; isDrawable = true;};
 
-    //void scale(float sx, float sy) {matrix.postScale(sx, sy);}
     void setColor(int color) { this.color = color; }
     abstract void translate(float x, float y);
     abstract void draw(Canvas canvas, Paint paint);

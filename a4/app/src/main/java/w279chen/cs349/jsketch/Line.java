@@ -63,11 +63,9 @@ public class Line extends Drawable {
         if (!isDrawable) {
             return;
         }
-        Matrix oldMatrix = canvas.getMatrix();
-        canvas.setMatrix(matrix);
+
         paint.setStrokeWidth(10);
         paint.setColor(color);
         canvas.drawLine(startx, starty, endx, endy, paint);
-        canvas.setMatrix(oldMatrix);
     }
 }

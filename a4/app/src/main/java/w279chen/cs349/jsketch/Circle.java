@@ -57,10 +57,7 @@ public class Circle extends Drawable{
         dify = endy - starty;
         radius = (float)Math.sqrt(difx*difx + dify*dify);
 
-        Matrix oldMatrix = canvas.getMatrix();
-        canvas.setMatrix(matrix);
         paint.setColor(color);
         canvas.drawCircle(startx, starty, radius, paint);
-        canvas.setMatrix(oldMatrix);
     }
 }
