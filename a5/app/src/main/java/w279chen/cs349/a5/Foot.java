@@ -67,9 +67,7 @@ public class Foot extends Drawable {
         float[] noScaleValues = new float[9];
         fullMatrix.getValues(fullValues);
         noScaleMatrix.getValues(noScaleValues);
-        for (int i = 0; i < 9; i++) {
-            System.out.println(i + "--- NoScale: "+ noScaleValues[i] + " Full: " + fullValues[i]);
-        }
+
         float translatex, translatey;
         if (noScaleValues[4] == 0 || fullValues[4] == 0) {
             translatey = 0;
@@ -81,9 +79,7 @@ public class Foot extends Drawable {
         } else {
             translatex = noScaleValues[2] / noScaleValues[1] - fullValues[2] / fullValues[1];
         }
-//            System.out.println(fullMatrix);
-//            System.out.println(noScaleMatrix);
-//            System.out.println(translatex + " " + translatey);
+
             noScaleMatrix.preTranslate(translatex, translatey);
 
 

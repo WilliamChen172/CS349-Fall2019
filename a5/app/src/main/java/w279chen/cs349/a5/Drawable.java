@@ -226,7 +226,6 @@ public abstract class Drawable {
         Matrix fullMatrix = getFullMatrix();
 
         Matrix scaleMatrix = this.scaleMatrix;
-        //System.out.println(id + ": " + fullMatrix);
 
         scaleMatrix.postConcat(fullMatrix);
 

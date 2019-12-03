@@ -108,7 +108,6 @@ public class CanvasView extends View {
                     if (selected == null) {
                         return false;
                     }
-                    System.out.println(selected.getId());
                     selected.handleMultiTouchEvent(event);
                     selected.interactionMode = Drawable.InteractionMode.SCALING;
                 }

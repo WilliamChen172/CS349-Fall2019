@@ -44,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
         about = findViewById(R.id.about);
         toolbar.setLayoutParams(new LinearLayout.LayoutParams(matchParent, 188));
         canvasView.setLayoutParams(new LinearLayout.LayoutParams(matchParent, 1500));
-        System.out.println("Height: " + getScreenHeight() + " Width: " + getScreenWidth());
+        reset.setLayoutParams(new LinearLayout.LayoutParams(300, matchParent));
+        about.setLayoutParams(new LinearLayout.LayoutParams(300, matchParent));
         View decorView = getWindow().getDecorView();
         // Hide the status bar.
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -68,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void showAbout()
     {
-        System.out.println("Did show about");
         AlertDialog ad = new AlertDialog.Builder(MainActivity.this).create();
         ad.setCancelable(true);
         ad.setTitle("Scene Graph");
