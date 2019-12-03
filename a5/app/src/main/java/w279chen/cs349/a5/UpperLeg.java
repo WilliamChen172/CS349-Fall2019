@@ -22,6 +22,8 @@ public class UpperLeg extends Drawable {
         pivot = new Point(pivotX, pivotY);
         rotateLimit = 90;
         interactionMode = InteractionMode.ROTATING;
+        defaultMode = InteractionMode.ROTATING;
+        canScale = true;
     }
 
     @Override
@@ -32,6 +34,7 @@ public class UpperLeg extends Drawable {
 
     @Override
     public boolean pointInside(float x, float y) {
+        System.out.println("Checking Upper Leg");
         Matrix fullMatrix = getFullMatrix();
         Matrix inverseMatrix = new Matrix();
         if (!fullMatrix.invert(inverseMatrix)) {
@@ -46,6 +49,7 @@ public class UpperLeg extends Drawable {
                 && vec[1] > originTop && vec[1] < originBottom) {
             return true;
         }
+        System.out.println("Not in Upper Leg");
         return false;
     }
 

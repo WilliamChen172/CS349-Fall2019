@@ -20,6 +20,8 @@ public class Hand extends Drawable {
         pivot = new Point(pivotX, pivotY);
         rotateLimit = 35;
         interactionMode = InteractionMode.ROTATING;
+        defaultMode = InteractionMode.ROTATING;
+        canScale = false;
     }
 
     @Override

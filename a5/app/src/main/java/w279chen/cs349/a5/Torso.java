@@ -18,6 +18,7 @@ public class Torso extends Drawable {
         id = idNumber;
         idNumber++;
         interactionMode = InteractionMode.DRAGGING;
+        defaultMode = InteractionMode.DRAGGING;
     }
 
     @Override

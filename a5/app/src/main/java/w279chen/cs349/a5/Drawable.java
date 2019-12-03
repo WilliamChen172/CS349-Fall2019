@@ -30,11 +30,15 @@ public abstract class Drawable {
     float rotateCurrent;
     Point pivot = null;
     InteractionMode interactionMode;
+    InteractionMode defaultMode;
 
     int id;
-
+    boolean canScale;
+    double distance = 0;
 
     Matrix matrix = new Matrix(); // identity matrix
+    Matrix scaleMatrix = new Matrix();
+    Matrix noScaleMatrix = new Matrix();
 
     public Drawable() {
     }
@@ -64,12 +68,16 @@ public abstract class Drawable {
     // Appends to the current matrix, so operations are cumulative
     void translate(float dx, float dy) {
         matrix.preTranslate(dx, dy);
+        noScaleMatrix.preTranslate(dx, dy);
     }
 
     // Scale by sx, sy
     // Appends to the current matrix, so operations are cumulative
     void scale(float sx, float sy) {
-        matrix.postScale(sx, sy);
+        if (canScale) {
+            matrix.preScale(sx, sy, pivot.x, pivot.y);
+            scaleMatrix.preScale(sx, sy, pivot.x, pivot.y);
+        }
     }
 
     void rotate(float degrees) {
@@ -79,8 +87,8 @@ public abstract class Drawable {
             } else if (rotateCurrent + degrees < Math.negateExact(rotateLimit)) {
             } else {
                 rotateCurrent += degrees;
-                //System.out.println(rotateCurrent);
                 matrix.postRotate(actualDegree, pivot.x, pivot.y);
+                noScaleMatrix.postRotate(actualDegree, pivot.x, pivot.y);
             }
 
         }
@@ -88,12 +96,32 @@ public abstract class Drawable {
 
     public abstract boolean pointInside(float x, float y);
 
+
+    protected void handleMultiTouchEvent(MotionEvent e) {
+        float diffx = e.getX(0) - e.getX(1);
+        float diffy = e.getY(0) - e.getY(1);
+        distance = Math.sqrt(diffx * diffx + diffy * diffy);
+    }
+
     protected void handleMouseDownEvent(MotionEvent e) {
         prevX = e.getX();
         prevY = e.getY();
     }
 
     protected void handleMouseDragEvent(MotionEvent e) {
+        if (e.getPointerCount() == 2) {
+            float diffx = e.getX(0) - e.getX(1);
+            float diffy = e.getY(0) - e.getY(1);
+            double newDistance = Math.sqrt(diffx * diffx + diffy * diffy);
+            if (newDistance < distance) {
+                scale(1, (float)0.98);
+                distance = newDistance;
+            } else if (newDistance > distance) {
+                scale(1, (float)1.05);
+                distance = newDistance;
+            }
+            return;
+        }
         switch (interactionMode) {
             case DRAGGING:
                 float x_diff = e.getX() - prevX;
@@ -105,7 +133,16 @@ public abstract class Drawable {
                 rotate(angle);
                 break;
             case SCALING:
-                scale(1, 1);
+                float diffx = e.getX(0) - e.getX(1);
+                float diffy = e.getY(0) - e.getY(1);
+                double newDistance = Math.sqrt(diffx * diffx + diffy * diffy);
+                if (newDistance < distance) {
+                    scale(1, (float)0.98);
+                    distance = newDistance;
+                } else if (newDistance > distance) {
+                    scale(1, (float)1.05);
+                    distance = newDistance;
+                }
                 break;
         }
         // Save our last point, if it's needed next time around
@@ -126,6 +163,13 @@ public abstract class Drawable {
         return null;
     }
 
+
+    Drawable getScaleHit(float x0, float y0, float x1, float y1) {
+        float midx = (x0 + x1)/2;
+        float midy = (y0 + y1)/2;
+        return getDrawableHit(midx, midy);
+    }
+
     Matrix getFullMatrix() {
         Matrix returnMatrix = new Matrix();
         Drawable cur = this;
@@ -136,15 +180,40 @@ public abstract class Drawable {
         return returnMatrix;
     }
 
+    Matrix getFullScaleMatrix() {
+        Matrix returnMatrix = new Matrix();
+        Drawable cur = this;
+        while (cur != null) {
+            returnMatrix.postConcat(cur.getScaleMatrix());
+            cur = cur.getParent();
+        }
+        return returnMatrix;
+    }
+
+    Matrix getFullNoScaleMatrix() {
+        Matrix returnMatrix = new Matrix();
+        Drawable cur = this;
+        while (cur != null) {
+            returnMatrix.postConcat(cur.getNoScaleMatrix());
+            cur = cur.getParent();
+        }
+        return returnMatrix;
+    }
+
+    Matrix getScaleMatrix() {
+        Matrix temp = this.scaleMatrix;
+        return temp;
+    }
+
     Matrix getLocalMatrix() {
         Matrix temp = this.matrix;
         return temp;
     }
 
-    public void transform(Matrix m) {
-        matrix.preConcat(m);
+    Matrix getNoScaleMatrix() {
+        Matrix temp = this.noScaleMatrix;
+        return temp;
     }
-
     // Draw using the current matrix
     void draw(Canvas canvas, Paint paint) {
 
@@ -156,8 +225,10 @@ public abstract class Drawable {
 
         Matrix fullMatrix = getFullMatrix();
 
-        Matrix usedMatrix = canvas.getMatrix();
-        usedMatrix.preConcat(fullMatrix);
+        Matrix scaleMatrix = this.scaleMatrix;
+        //System.out.println(id + ": " + fullMatrix);
+
+        scaleMatrix.postConcat(fullMatrix);
 
 
         canvas.setMatrix(fullMatrix);
@@ -190,6 +261,5 @@ public abstract class Drawable {
         double oldAngle = Math.atan2(oldPoint[0] - centerX, oldPoint[1] - centerY) * 180 / Math.PI;
         return oldAngle - newAngle;
     }
-
 
 }

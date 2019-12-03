@@ -22,6 +22,8 @@ public class LowerArm extends Drawable {
         pivot = new Point(pivotX, pivotY);
         rotateLimit = 135;
         interactionMode = InteractionMode.ROTATING;
+        defaultMode = InteractionMode.ROTATING;
+        canScale = false;
     }
 
     @Override

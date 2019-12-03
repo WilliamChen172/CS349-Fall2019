@@ -17,6 +17,8 @@ public class Head extends Drawable {
         pivot = new Point(1280, 300);
         rotateLimit = 50;
         interactionMode = InteractionMode.ROTATING;
+        defaultMode = InteractionMode.ROTATING;
+        canScale = false;
     }
 
     @Override

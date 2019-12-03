@@ -22,6 +22,8 @@ public class LowerLeg extends Drawable {
         pivot = new Point(pivotX, pivotY);
         rotateLimit = 90;
         interactionMode = InteractionMode.ROTATING;
+        defaultMode = InteractionMode.ROTATING;
+        canScale = true;
     }
 
     @Override

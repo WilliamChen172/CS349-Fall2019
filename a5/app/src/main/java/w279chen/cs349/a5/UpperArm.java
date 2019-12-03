@@ -22,6 +22,8 @@ public class UpperArm extends Drawable {
         pivot = new Point(pivotX, pivotY);
         rotateLimit = 360;
         interactionMode = InteractionMode.ROTATING;
+        defaultMode = InteractionMode.ROTATING;
+        canScale = false;
     }
 
     @Override
