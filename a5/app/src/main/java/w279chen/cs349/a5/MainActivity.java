@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     CanvasView canvasView;
     Button reset;
     Button about;
+    Button switchButton;
 
     private static final int matchParent = LinearLayout.LayoutParams.MATCH_PARENT;
 
@@ -42,10 +43,12 @@ public class MainActivity extends AppCompatActivity {
         canvasView = new CanvasView(this.getBaseContext());
         reset = findViewById(R.id.reset);
         about = findViewById(R.id.about);
+        switchButton = findViewById(R.id.switchbtn);
         toolbar.setLayoutParams(new LinearLayout.LayoutParams(matchParent, 188));
         canvasView.setLayoutParams(new LinearLayout.LayoutParams(matchParent, 1500));
         reset.setLayoutParams(new LinearLayout.LayoutParams(300, matchParent));
         about.setLayoutParams(new LinearLayout.LayoutParams(300, matchParent));
+        switchButton.setLayoutParams(new LinearLayout.LayoutParams(300, matchParent));
         View decorView = getWindow().getDecorView();
         // Hide the status bar.
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -63,6 +66,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 MainActivity.this.showAbout();
+            }
+        });
+
+        switchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                canvasView.switchDoll();
             }
         });
     }
