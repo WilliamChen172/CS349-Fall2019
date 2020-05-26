@@ -4,5 +4,5 @@ A1: Command-Line Rename Application
 A2: Album Application
 A3: Classic Snake Game
 A4: Drawing Tool (Android)
-A5: Paper Doll (Android 
+A5: Paper Doll (Android) 
 
